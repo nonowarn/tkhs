@@ -8,7 +8,8 @@ license-file:        LICENSE
 extra-source-files:  README, demo.txt
 author:              Yusaku Hashimoto
 maintainer:          <nonowarn@gmail.com>
-build-depends:       base, pointedlist, mtl, vty, parsec == 3.*
+build-depends:       base, pointedlist, mtl, vty, parsec == 3.*,
+                     utf8-string
 build-type:          Simple
 
 executable:          tkhs
