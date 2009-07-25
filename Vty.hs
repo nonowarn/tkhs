@@ -5,7 +5,7 @@ module Vty (
   V (..), runVty
 
 -- ** Accessing Vty
-, event, draw
+, event, draw, clear
 , size, width, height
 
 -- ** Utilities along V
@@ -70,6 +70,9 @@ event = ask >>= liftIO . getEvent
 
 draw :: Picture -> V ()
 draw p = ask >>= liftIO . flip update p
+
+clear :: V ()
+clear = ask >>= liftIO . refresh
 
 type Width = Int
 type Height = Int
@@ -193,4 +196,3 @@ centeringBy wholeWidth wholeHeight img
                      <-> spacebox imgW bpad)
                      <|>
                      spacebox rpad wholeHeight
-

@@ -40,7 +40,7 @@ slideToImage (F ls) = processBy ljust                ls
 
 processBy :: (Int -> Image -> Image) -> [String] -> Image
 processBy f ls = let imgs = map render ls
-                     maxlen = maximum $ map length ls
+                     maxlen = maximum $ map imgWidth imgs
                  in vertcat . map (f maxlen) $ imgs
 
 slideSetToPictureSet :: SlideSet -> V PictureSet
@@ -60,6 +60,7 @@ liftV = P . lift
 presentation :: P ()
 presentation = do
   current <- Zipper.focus <$> get
+  liftV clear
   liftV . draw $ current
   control
 
