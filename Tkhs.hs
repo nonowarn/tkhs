@@ -1,10 +1,24 @@
 {-# OPTIONS_GHC -fglasgow-exts #-}
 
-module Tkhs where
+module Tkhs (
+-- * P Monad (Presentation with Vty)
+  P (..), runP, liftV
+
+-- ** Presentaion loop
+, presentation
+
+-- * Slides
+, Slide (..), SlideSet, PictureSet
+
+-- * Zipper
+, Zipper
+)where
 
 import Vty
+
 import qualified Data.List.PointedList as Zipper
 import Data.List.PointedList (PointedList)
+import Control.Applicative hiding ((<|>))
 import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Traversable as T
@@ -45,7 +59,7 @@ liftV = P . lift
 
 presentation :: P ()
 presentation = do
-  current <- fmap Zipper.focus get
+  current <- Zipper.focus <$> get
   liftV . draw $ current
   control
 

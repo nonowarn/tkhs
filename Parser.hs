@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fglasgow-exts -XNoMonomorphismRestriction #-}
 {-# OPTIONS_GHC -XPackageImports #-}
 
-module Parser where
+module Parser (parseSlides) where
 
 import Tkhs
 
@@ -18,9 +18,10 @@ parseSlides str = parse (fromJust . Zipper.fromList <$> many1 slide) "" str
 
 type PC a = ParsecT String () Identity a
 
-t_sig = char '-' >> newline
-f_sig = char '=' >> newline
-any_sig = choice [t_sig,f_sig] >> return ()
+t_sig, f_sig, any_sig :: PC ()
+t_sig = char '-' >> newline >> return ()
+f_sig = char '=' >> newline >> return ()
+any_sig = choice [t_sig,f_sig]
 
 t :: PC Slide
 t = do

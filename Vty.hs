@@ -194,20 +194,3 @@ centeringBy wholeWidth wholeHeight img
                      <|>
                      spacebox rpad wholeHeight
 
-{- 
-
-example
-
-main = runVty $ do
-         tkhs "this is the test string"
-         waitEvent (EvKey (KASCII 'n') [])
-         tkhs "はうはうはうはう"
-         waitEvent (EvKey (KASCII 'q') [])
-    where tkhs str = draw . toPic =<< centering (render str)
-          waitEvent until = do
-            gotten <- event
-            if gotten == until
-              then return ()
-              else waitEvent until
-
- -}
