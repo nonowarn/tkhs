@@ -1,0 +1,27 @@
+=
+Simple Terminal
+Presentaion Utility
+
+tkhs
+-
+Usage
+-
+tkhs presentaion.file
+-
+Try
+tkhs README (this file)
+-
+Keybind
+=
+N for next slide
+P for previous slide
+Q for quit
+-
+Format of
+presentaion file
+-
+See README
+and demo.txt
+-
+That's all
+=

@@ -1,0 +1,19 @@
+name:                tkhs
+version:             0.0.0.1
+synopsis:            Simple Terminal Presentaion Utility
+description:         Get Takahashi Method with Terminal
+category:            Graphics
+license:             BSD3
+license-file:        LICENSE
+extra-source-files:  README, demo.txt
+author:              Yusaku Hashimoto
+maintainer:          <nonowarn@gmail.com>
+build-depends:       base, pointedlist, mtl, vty, parsec == 3.*
+build-type:          Simple
+
+executable:          tkhs
+main-is:             Main.hs
+ghc-options:         -Wall
+other-modules:       Vty
+		     Tkhs
+		     Parser
