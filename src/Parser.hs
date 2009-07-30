@@ -6,7 +6,7 @@ module Parser (parseSlides) where
 import Tkhs
 
 import Text.Parsec hiding (newline, (<|>))
-import "mtl" Control.Monad.Identity
+import Control.Monad.Identity
 import Control.Applicative hiding (many)
 import Data.Maybe
 import Data.List.PointedList as Zipper

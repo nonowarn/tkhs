@@ -54,19 +54,19 @@ processBy f ls = let imgs = map render ls
 
 runP :: P a -> SlideSet -> IO a
 runP (P st) slides = runVty $ do
-                       ourVty <- ask
-                       let imgset = fmap slideToImage slides
-                       check <- F.and <$> T.mapM doesFit imgset
-                       when (not check) $ do
-                         let maxWidth = F.maximum $ fmap imgWidth imgset
-                             maxHeight = F.maximum $ fmap imgHeight imgset
-                         mapM_ warn [ "To drawing this presentation, at least "
-                                          ++ show maxWidth ++ "x" ++ show maxHeight
-                                          ++ " size is needed."
-                                    , "Press any key to exit, and try bigger terminal. Sorry." ]
-                         liftIO =<< waitOnce exitFailure (return undefined)
-                       pictures <- T.mapM (fmap toPic . centering) imgset
-                       evalStateT st pictures `withVty` ourVty
+   ourVty <- ask
+   let imgset = fmap slideToImage slides
+   check <- F.and <$> T.mapM doesFit imgset
+   when (not check) $ do
+     let maxWidth = F.maximum $ fmap imgWidth imgset
+         maxHeight = F.maximum $ fmap imgHeight imgset
+     mapM_ warn [ "To drawing this presentation, at least "
+                      ++ show maxWidth ++ "x" ++ show maxHeight
+                      ++ " size is needed."
+                , "Press any key to exit, and try bigger terminal. Sorry." ]
+     liftIO =<< waitOnce exitFailure (return undefined)
+   pictures <- T.mapM (fmap toPic . centering) imgset
+   evalStateT st pictures `withVty` ourVty
 
 warn :: String -> V ()
 warn str = do

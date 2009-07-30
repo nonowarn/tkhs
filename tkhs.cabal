@@ -40,7 +40,6 @@ Executable test
   build-depends:     test-framework
                    , test-framework-hunit
                    , HUnit
-                   , QuickCheck >= 2.1.0.1 && < 2.2
   ghc-options:       -fglasgow-exts
   if !flag(test)
     buildable:      False
