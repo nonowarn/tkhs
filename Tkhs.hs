@@ -22,6 +22,9 @@ import Control.Applicative hiding ((<|>))
 import Control.Monad.State
 import Control.Monad.Reader
 import qualified Data.Traversable as T
+import qualified Data.Foldable as F
+import System.IO
+import System.Exit
 
 type Zipper a = PointedList a
 
@@ -51,6 +54,15 @@ slideSetToPictureSet = T.mapM $ fmap toPic
 runP :: P a -> SlideSet -> IO a
 runP (P st) slides = runVty $ do
                        ourVty <- ask
+                       check <- F.and <$> T.mapM (doesFit . slideToImage)
+                                          slides
+                       when (not check) $ do
+                         liftIO $ do
+                           hPutStrLn stderr "This terminal seemed too small for your slides."
+                           hPutStrLn stderr "Please try in more bigger terminal."
+                           hPutStrLn stderr "Press any key to exit, Sorry."
+                         waitOnce (return () :: V ()) (return ())
+                         liftIO $ exitFailure
                        pictures <- slideSetToPictureSet slides
                        evalStateT st pictures `withVty` ourVty
 
