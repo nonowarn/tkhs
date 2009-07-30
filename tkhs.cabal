@@ -8,13 +8,38 @@ license-file:        LICENSE
 extra-source-files:  README, demo.txt
 author:              Yusaku Hashimoto
 maintainer:          <nonowarn@gmail.com>
-build-depends:       base, pointedlist, mtl, vty, parsec == 3.*,
-                     utf8-string
 build-type:          Simple
+cabal-version:       >= 1.2
 
-executable:          tkhs
-main-is:             Main.hs
-ghc-options:         -Wall
-other-modules:       Vty
-		     Tkhs
-		     Parser
+flag test
+  description:       Build test program.
+  default:           False
+
+Executable tkhs
+  executable:          tkhs
+  main-is:             Main.hs
+  ghc-options:         -Wall
+  build-depends:       base == 4.*
+                     , pointedlist
+                     , mtl
+                     , vty
+                     , parsec == 3.*
+                     , utf8-string
+  other-modules:       Vty
+                       Tkhs
+                       Parser
+  if flag(test)
+    buildable:           False
+
+Executable test
+  hs-source-dirs:    ., test
+  other-modules:
+  main-is:           Test.hs
+  build-depends:     test-framework
+                   , test-framework-hunit
+                   , test-framework-quickcheck2
+                   , HUnit
+                   , QuickCheck >= 2.1.0.1 && < 2.2
+  ghc-options:       -fglasgow-exts
+  if !flag(test)
+    buildable:      False
