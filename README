@@ -1,15 +1,20 @@
 =
-Simple Terminal
-Presentaion Utility
+Simple
+Presentaion
+Utility
 
 tkhs
 -
 Usage
 -
-tkhs presentaion.file
+tkhs slide.txt
 -
 Try
 tkhs README (this file)
+-
+Control
+-
+Using Keyboard
 -
 Keybind
 =
@@ -20,8 +25,27 @@ Q for quit
 Format of
 presentaion file
 -
-See README
-and demo.txt
+See This File
+-
+Centered style (-)
+Preformatted style (=)
+-
+is (and only)
+Avaliable
 -
 That's all
+-
+Any Feedbacks are
+Appreciated
+-
+tkhs is inspired by
+hspresent
+-
+Try also
+cabal install hspresent
+-
+Thanks
+-
+Especially Thanks to
+Evan, author of hspresent
 =
