@@ -57,12 +57,17 @@ runP (P st) slides = runVty $ do
                        check <- F.and <$> T.mapM (doesFit . slideToImage)
                                           slides
                        when (not check) $ do
+                         let maxWidth = F.maximum $ fmap (imgWidth . slideToImage) slides
+                             maxHeight = F.maximum $ fmap (imgHeight . slideToImage) slides
                          liftIO $ do
                            hPutStrLn stderr "This terminal seemed too small for your slides."
                            hPutStrLn stderr "Please try in more bigger terminal."
+                           hPutStrLn stderr $ "You need at least "
+                                            ++ show maxWidth
+                                            ++ "x"
+                                            ++ show maxHeight ++ "."
                            hPutStrLn stderr "Press any key to exit, Sorry."
-                         waitOnce (return () :: V ()) (return ())
-                         liftIO $ exitFailure
+                         liftIO =<< waitOnce exitFailure (return ())
                        pictures <- slideSetToPictureSet slides
                        evalStateT st pictures `withVty` ourVty
 
