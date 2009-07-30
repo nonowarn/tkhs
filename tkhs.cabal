@@ -1,6 +1,6 @@
 name:                tkhs
 version:             0.0.0.1
-synopsis:            Simple Terminal Presentaion Utility
+synopsis:            Simple Presentaion Utility
 description:         Get Takahashi Method with Terminal
 category:            Graphics
 license:             BSD3
@@ -10,28 +10,29 @@ author:              Yusaku Hashimoto
 maintainer:          <nonowarn@gmail.com>
 build-type:          Custom
 cabal-version:       >= 1.2
+homepage:            http://patch-tag.com/r/tkhs/snapshot/current/content/pretty/README
 
 flag test
   description:       Build test program.
   default:           False
 
 Executable tkhs
-  hs-source-dirs:      src
-  executable:          tkhs
-  main-is:             Main.hs
-  ghc-options:         -Wall
-  build-depends:       base == 4.*
-                     , pointedlist
-                     , mtl
-                     , vty
-                     , parsec == 3.*
-                     , pretty
-                     , utf8-string
-  other-modules:       Vty
-                       Tkhs
-                       Parser
+  hs-source-dirs:    src
+  executable:        tkhs
+  main-is:           Main.hs
+  ghc-options:       -Wall
+  build-depends:     base == 4.*
+                   , pointedlist
+                   , mtl
+                   , vty
+                   , parsec == 3.*
+                   , pretty
+                   , utf8-string
+  other-modules:     Vty
+                     Tkhs
+                     Parser
   if flag(test)
-    buildable:         False
+    buildable:       False
 
 Executable test
   hs-source-dirs:    src, test
@@ -42,4 +43,8 @@ Executable test
                    , HUnit
   ghc-options:       -fglasgow-exts
   if !flag(test)
-    buildable:      False
+    buildable:       False
+
+Source-repository head
+  type:              darcs
+  location:          http://patch-tag.com/r/tkhs/pullrepo
