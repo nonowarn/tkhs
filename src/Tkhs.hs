@@ -60,10 +60,10 @@ runP (P st) slides = runVty $ do
    when (not check) $ do
      let maxWidth = F.maximum $ fmap imgWidth imgset
          maxHeight = F.maximum $ fmap imgHeight imgset
-     mapM_ warn [ "To drawing this presentation, at least "
-                      ++ show maxWidth ++ "x" ++ show maxHeight
-                      ++ " size is needed."
-                , "Press any key to exit, and try bigger terminal. Sorry." ]
+     mapM_ warn [ "To display this presentation, the terminal must be at least "
+                      ++ show maxWidth ++ "x" ++ show maxHeight ++ "."
+                , "Please try again with a bigger terminal."
+                , "Press any key to exit." ]
      liftIO =<< waitOnce exitFailure (return undefined)
    pictures <- T.mapM (fmap toPic . centering) imgset
    evalStateT st pictures `withVty` ourVty
