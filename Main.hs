@@ -26,5 +26,5 @@ processWideChars str = let wideChars = length . filter (not . isHalfWidth) $ str
 -- http://ash.jp/code/unitbl1.htm
 isHalfWidth :: Char -> Bool
 isHalfWidth c = isLatin1 c || c `elem` [h .. t]
-    where h = head . decodeString $ "\xef\xbd\xa1"
-          t = head . decodeString $ "\xef\xbe\x9f"
+    where h = head . decodeString $ "\xef\xbd\xa1" -- minimum of half-kana
+          t = head . decodeString $ "\xef\xbe\x9f" -- maximum of half-kana
