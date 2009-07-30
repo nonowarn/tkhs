@@ -9,7 +9,7 @@ module Vty (
 , size, width, height
 
 -- ** Utilities along V
-, centering
+, centering, doesFit
 
 -- * D Monad (Event Dispatcher Combinators)
 , D (..), KeyEvent (..), Dispatcher, toTable, toEvent
@@ -27,6 +27,7 @@ module Vty (
 
 -- * Utilities
 , toPic, render, centeringBy, Width, Height
+, doesFitBy
 
 , module Graphics.Vty
 ) where
@@ -81,6 +82,11 @@ centering image = do
                then image
                else centeringBy w h image
   return newImg
+
+doesFit :: Image -> V Bool
+doesFit img = do
+  (w,h) <- size
+  return . doesFitBy w h $ img
 
 addDispatcher :: Dispatcher r -> D r ()
 addDispatcher = tell . (:[])
@@ -159,3 +165,7 @@ centeringBy wholeWidth wholeHeight img
                      <-> spacebox imgW bpad)
                      <|>
                      spacebox rpad wholeHeight
+
+doesFitBy :: Width -> Height -> Image -> Bool
+doesFitBy w h img = w >= imgWidth img && h >= imgHeight img
+

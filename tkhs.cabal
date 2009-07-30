@@ -37,7 +37,6 @@ Executable test
   main-is:           Test.hs
   build-depends:     test-framework
                    , test-framework-hunit
-                   , test-framework-quickcheck2
                    , HUnit
                    , QuickCheck >= 2.1.0.1 && < 2.2
   ghc-options:       -fglasgow-exts
