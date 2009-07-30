@@ -67,11 +67,12 @@ presentation = do
 control :: P ()
 control = id =<< dispatch
     where dispatch = liftV . waitBy $ do
-            onKey (ascii 'n') (goNext >> presentation)
-            onKey kright      (goNext >> presentation)
-            onKey (ascii 'p') (goPrev >> presentation)
-            onKey kleft       (goPrev >> presentation)
+            onKey (ascii 'n') $ loopBy goNext
+            onKey kright      $ loopBy goNext
+            onKey (ascii 'p') $ loopBy goPrev
+            onKey kleft       $ loopBy goPrev
             onKey (ascii 'q') quit
+          loopBy = (>> presentation)
 
 goNext :: P ()
 goNext = modify (\s -> maybe s id (Zipper.next s))
