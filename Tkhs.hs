@@ -25,6 +25,7 @@ import qualified Data.Traversable as T
 import qualified Data.Foldable as F
 import System.IO
 import System.Exit
+import Text.PrettyPrint hiding (render)
 
 type Zipper a = PointedList a
 
@@ -46,30 +47,33 @@ processBy f ls = let imgs = map render ls
                      maxlen = maximum $ map imgWidth imgs
                  in vertcat . map (f maxlen) $ imgs
 
-slideSetToPictureSet :: SlideSet -> V PictureSet
-slideSetToPictureSet = T.mapM $ fmap toPic
-                              . centering
-                              . slideToImage
+-- slideSetToPictureSet :: SlideSet -> V PictureSet
+-- slideSetToPictureSet = T.mapM $ fmap toPic
+--                               . centering
+--                               . slideToImage
 
 runP :: P a -> SlideSet -> IO a
 runP (P st) slides = runVty $ do
                        ourVty <- ask
-                       check <- F.and <$> T.mapM (doesFit . slideToImage)
-                                          slides
+                       let imgset = fmap slideToImage slides
+                       check <- F.and <$> T.mapM doesFit imgset
                        when (not check) $ do
-                         let maxWidth = F.maximum $ fmap (imgWidth . slideToImage) slides
-                             maxHeight = F.maximum $ fmap (imgHeight . slideToImage) slides
-                         liftIO $ do
-                           hPutStrLn stderr "This terminal seemed too small for your slides."
-                           hPutStrLn stderr "Please try in more bigger terminal."
-                           hPutStrLn stderr $ "You need at least "
-                                            ++ show maxWidth
-                                            ++ "x"
-                                            ++ show maxHeight ++ "."
-                           hPutStrLn stderr "Press any key to exit, Sorry."
-                         liftIO =<< waitOnce exitFailure (return ())
-                       pictures <- slideSetToPictureSet slides
+                         let maxWidth = F.maximum $ fmap imgWidth imgset
+                             maxHeight = F.maximum $ fmap imgHeight imgset
+                         mapM_ warn [ "To drawing this presentation, at least "
+                                          ++ show maxWidth ++ "x" ++ show maxHeight
+                                          ++ " size is needed."
+                                    , "Press any key to exit, and try bigger terminal. Sorry." ]
+                         liftIO =<< waitOnce exitFailure (return undefined)
+                       pictures <- T.mapM (fmap toPic . centering) imgset
                        evalStateT st pictures `withVty` ourVty
+
+warn :: String -> V ()
+warn str = do
+  w <- width
+  liftIO . hPutStrLn stderr
+         . renderStyle style { lineLength = w, ribbonsPerLine = 1.0 }
+         . fsep . map text . words $ str
 
 liftV :: V a -> P a
 liftV = P . lift

@@ -24,6 +24,7 @@ Executable tkhs
                      , mtl
                      , vty
                      , parsec == 3.*
+                     , pretty
                      , utf8-string
   other-modules:       Vty
                        Tkhs
