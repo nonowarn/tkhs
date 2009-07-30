@@ -11,12 +11,6 @@ module Vty (
 -- ** Utilities along V
 , centering
 
--- * A Monad (Attr Combinators)
-, A (..), buildAttr
-
--- ** Attr Combinators
-, fg, bg, rv, bold, underline, blink
-
 -- * D Monad (Event Dispatcher Combinators)
 , D (..), KeyEvent (..), Dispatcher, toTable, toEvent
 
@@ -32,7 +26,7 @@ module Vty (
 , addDispatcher
 
 -- * Utilities
-, toPic, render, renderA, centeringBy, Width, Height
+, toPic, render, centeringBy, Width, Height
 
 , module Graphics.Vty
 ) where
@@ -44,20 +38,13 @@ import Control.Monad.Writer
 import Control.Exception
 -- import Codec.Binary.UTF8.String
 -- import qualified Data.ByteString.UTF8 as U
-import Data.Monoid
 
 newtype V a = V { unV :: ReaderT Vty IO a }
     deriving (Functor, Monad, MonadIO, MonadReader Vty)
 
-newtype A a = A { unA :: Writer (Endo Attr) a }
-    deriving (Functor, Monad, MonadWriter (Endo Attr))
-
 type Dispatcher r = (Event, r)
 newtype D r a = D { unD :: Writer [Dispatcher r] a }
     deriving (Functor, Monad, MonadWriter [Dispatcher r])
-
-buildAttr :: A a -> Attr
-buildAttr (A w) = appEndo (execWriter w) attr
 
 runVty :: V a -> IO a
 runVty (V v) = do
@@ -94,27 +81,6 @@ centering image = do
                then image
                else centeringBy w h image
   return newImg
-
-addAttr :: (Attr -> Attr) -> A ()
-addAttr = tell . Endo
-
-fg :: Color -> A ()
-fg = addAttr . setFG
-
-bg :: Color -> A ()
-bg = addAttr . setBG
-
-rv :: A ()
-rv = addAttr setRV
-
-underline :: A ()
-underline = addAttr setUnderline
-
-blink :: A ()
-blink = addAttr setBlink
-
-bold :: A ()
-bold = addAttr setBold
 
 addDispatcher :: Dispatcher r -> D r ()
 addDispatcher = tell . (:[])
@@ -171,9 +137,6 @@ render :: String -> Image
 -- render str = let bs = U.pack str
 --              in renderBS attr bs
 render = horzcat . map (renderChar attr)
-
-renderA :: A a -> String -> Image
-renderA at = horzcat . map (renderChar (buildAttr at))
 
 centeringBy :: Width -> Height -> Image -> Image
 centeringBy wholeWidth wholeHeight img
