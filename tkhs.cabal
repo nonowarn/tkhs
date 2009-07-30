@@ -5,7 +5,7 @@ description:         Get Takahashi Method with Terminal
 category:            Graphics
 license:             BSD3
 license-file:        LICENSE
-extra-source-files:  README, demo.txt
+extra-source-files:  README, demo/demo.txt
 author:              Yusaku Hashimoto
 maintainer:          <nonowarn@gmail.com>
 build-type:          Custom
@@ -16,6 +16,7 @@ flag test
   default:           False
 
 Executable tkhs
+  hs-source-dirs:      src
   executable:          tkhs
   main-is:             Main.hs
   ghc-options:         -Wall
@@ -33,7 +34,7 @@ Executable tkhs
     buildable:         False
 
 Executable test
-  hs-source-dirs:    ., test
+  hs-source-dirs:    src, test
   other-modules:
   main-is:           Test.hs
   build-depends:     test-framework
