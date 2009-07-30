@@ -9,7 +9,7 @@ import Codec.Binary.UTF8.String
 import Data.Char
 
 main :: IO ()
-main = getArgs >>= U.readFile . head
+main = getArgs >>= U.readFile . headOrUsage
                >>= either (error . show) (runP presentation) . preprocess
     -- vty recognizes any charactor has 1 half-width
     -- thus for non-ascii full-width byte char,
@@ -17,6 +17,10 @@ main = getArgs >>= U.readFile . head
     -- concretely, 1 half-width is ignored by 1 full-width char,
     -- thus ignored width is added by adding spaces.
     where preprocess = parseSlides . unlines . map processWideChars . lines
+
+headOrUsage :: [String] -> String
+headOrUsage ls | null ls = error "Usage: tkhs [presentation]"
+               | otherwise = head ls
 
 processWideChars :: String -> String
 processWideChars str = let wideChars = length . filter (not . isHalfWidth) $ str
