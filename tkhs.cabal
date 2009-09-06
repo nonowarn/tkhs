@@ -1,5 +1,5 @@
 name:                tkhs
-version:             0.1.0.3
+version:             0.1.0.4
 synopsis:            Simple Presentation Utility
 description:         If you want to give your presentation in a terminal,
                      or if PowerPoint would be overkill, you may find tkhs useful.
