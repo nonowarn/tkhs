@@ -40,12 +40,14 @@ Executable test
   hs-source-dirs:    src, test
   other-modules:
   main-is:           Test.hs
-  build-depends:     test-framework
-                   , test-framework-hunit
-                   , HUnit
   ghc-options:       -fglasgow-exts
   if !flag(test)
-    buildable:       False
+    buildable:         False
+  else
+    build-depends:     test-framework
+                     , test-framework-hunit
+                     , HUnit
+
 
 Source-repository head
   type:              darcs
