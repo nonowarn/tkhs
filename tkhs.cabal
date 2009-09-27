@@ -51,4 +51,4 @@ Executable test
 
 Source-repository head
   type:              darcs
-  location:          http://patch-tag.com/r/tkhs/pullrepo
+  location:          http://patch-tag.com/r/nonowarn/tkhs/pullrepo
