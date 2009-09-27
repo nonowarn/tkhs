@@ -12,7 +12,7 @@ maintainer:          Yusaku Hashimoto <nonowarn@gmail.com>
 build-type:          Custom
 cabal-version:       >= 1.6
 stability:           experimental
-homepage:            http://patch-tag.com/r/tkhs/snapshot/current/content/pretty/README
+homepage:            http://patch-tag.com/r/nonowarn/tkhs/snapshot/current/content/pretty/README
 
 flag test
   description:       Build test program.
