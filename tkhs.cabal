@@ -26,7 +26,7 @@ Executable tkhs
   build-depends:     base == 4.*
                    , pointedlist
                    , mtl
-                   , vty == 3.*
+                   , vty == 4.*
                    , parsec == 3.*
                    , pretty
                    , utf8-string

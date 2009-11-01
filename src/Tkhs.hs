@@ -14,7 +14,7 @@ module Tkhs (
 , Zipper
 )where
 
-import Vty
+import Vty hiding (style)
 
 import qualified Data.List.PointedList as Zipper
 import Data.List.PointedList (PointedList)
@@ -37,15 +37,15 @@ newtype P a = P { unP :: StateT PictureSet V a }
     deriving (Functor, Monad, MonadState PictureSet)
 
 slideToImage :: Slide -> Image
-slideToImage (T ls) = processBy (flip centeringBy 1) ls
+slideToImage (T ls) = processBy (flip centeringBy 1 . fromIntegral) ls
 slideToImage (F ls) = processBy ljust                ls
-    where ljust maxlen img = let orig_width = imgWidth img
-                             in img <|> render (replicate (maxlen - orig_width) ' ')
+    where ljust maxlen img = let orig_width = image_width img
+                             in img <|> render (replicate (maxlen - fromIntegral orig_width) ' ')
 
 processBy :: (Int -> Image -> Image) -> [String] -> Image
 processBy f ls = let imgs = map render ls
-                     maxlen = maximum $ map imgWidth imgs
-                 in vertcat . map (f maxlen) $ imgs
+                     maxlen = fromIntegral . maximum $ map image_width imgs
+                 in vert_cat . map (f maxlen) $ imgs
 
 -- slideSetToPictureSet :: SlideSet -> V PictureSet
 -- slideSetToPictureSet = T.mapM $ fmap toPic
@@ -58,13 +58,13 @@ runP (P st) slides = runVty $ do
    let imgset = fmap slideToImage slides
    check <- F.and <$> T.mapM doesFit imgset
    when (not check) $ do
-     let maxWidth = F.maximum $ fmap imgWidth imgset
-         maxHeight = F.maximum $ fmap imgHeight imgset
+     let maxWidth = F.maximum $ fmap image_width imgset
+         maxHeight = F.maximum $ fmap image_height imgset
      mapM_ warn [ "To display this presentation, the terminal must be at least "
                       ++ show maxWidth ++ "x" ++ show maxHeight ++ "."
                 , "Please try again with a bigger terminal."
                 , "Press any key to exit." ]
-     liftIO =<< waitOnce exitFailure (return undefined)
+     liftIO =<< waitOnce exitFailure (return ())
    pictures <- T.mapM (fmap toPic . centering) imgset
    evalStateT st pictures `withVty` ourVty
 
@@ -72,7 +72,7 @@ warn :: String -> V ()
 warn str = do
   w <- width
   liftIO . hPutStrLn stderr
-         . renderStyle style { lineLength = w, ribbonsPerLine = 1.0 }
+         . renderStyle style { lineLength = fromIntegral w, ribbonsPerLine = 1.0 }
          . fsep . map text . words $ str
 
 liftV :: V a -> P a
@@ -81,7 +81,6 @@ liftV = P . lift
 presentation :: P ()
 presentation = do
   current <- Zipper.focus <$> get
-  liftV clear
   liftV . draw $ current
   control
 

@@ -37,6 +37,7 @@ import Control.Applicative hiding ((<|>))
 import Control.Monad.Reader
 import Control.Monad.Writer
 import Control.Exception
+import Data.Word
 -- import Codec.Binary.UTF8.String
 -- import qualified Data.ByteString.UTF8 as U
 
@@ -54,7 +55,7 @@ runVty (V v) = do
   return a
 
 event :: V Event
-event = ask >>= liftIO . getEvent
+event = ask >>= liftIO . next_event
 
 draw :: Picture -> V ()
 draw p = ask >>= liftIO . flip update p
@@ -62,11 +63,14 @@ draw p = ask >>= liftIO . flip update p
 clear :: V ()
 clear = ask >>= liftIO . refresh
 
-type Width = Int
-type Height = Int
+type Width = Word
+type Height = Word
 
 size :: V (Width,Height)
-size = ask >>= liftIO . getSize
+size = do
+  term <- terminal <$> ask
+  DisplayRegion w h <- liftIO $ display_bounds term
+  return (w,h)
 
 width :: V Width
 width = fst <$> size
@@ -77,7 +81,7 @@ height = snd <$> size
 centering :: Image -> V Image
 centering image = do
   (w,h) <- size
-  let imgW = imgWidth image
+  let imgW = image_width image
       newImg = if imgW > w
                then image
                else centeringBy w h image
@@ -137,27 +141,30 @@ waitOnce r d = do
   return . maybe r id . lookup evt $ toTable d
 
 toPic :: Image -> Picture
-toPic img = pic { pImage = img }
+toPic img = pic_for_image img
 
 render :: String -> Image
 -- render str = let bs = U.pack str
 --              in renderBS attr bs
-render = horzcat . map (renderChar attr)
+render = horiz_cat . map (char def_attr)
+
+toInt :: Word -> Int
+toInt = fromIntegral
 
 centeringBy :: Width -> Height -> Image -> Image
 centeringBy wholeWidth wholeHeight img
-    | wholeWidth < imgWidth img || wholeHeight < imgHeight img = img
-    | otherwise = let imgW = imgWidth img
-                      imgH = imgHeight img
+    | wholeWidth < image_width img || wholeHeight < image_height img = img
+    | otherwise = let imgW = image_width img
+                      imgH = image_height img
                       magW = wholeWidth - imgW
                       magH = wholeHeight - imgH
                       lpad = magW `div` 2
                       rpad = magW `div` 2 + magW `mod` 2
                       tpad = magH `div` 2
                       bpad = magH `div` 2 + magH `mod` 2
-                      spacebox w h  = vertcat
-                                    . replicate h
-                                    . render $ replicate w ' '
+                      spacebox w h  = vert_cat
+                                    . replicate (toInt h)
+                                    . render $ replicate (toInt w) ' '
                   in spacebox lpad wholeHeight
                      <|>
                         (spacebox imgW tpad
@@ -167,5 +174,5 @@ centeringBy wholeWidth wholeHeight img
                      spacebox rpad wholeHeight
 
 doesFitBy :: Width -> Height -> Image -> Bool
-doesFitBy w h img = w >= imgWidth img && h >= imgHeight img
+doesFitBy w h img = w >= image_width img && h >= image_height img
 
