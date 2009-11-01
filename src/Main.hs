@@ -5,7 +5,6 @@ import Parser
 
 import System.Environment
 import System.IO.UTF8 as U
-import Codec.Binary.UTF8.String
 import Data.Char
 import qualified Data.List.PointedList as Zipper
 import Data.Maybe
