@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fglasgow-exts -XNoMonomorphismRestriction #-}
-{-# OPTIONS_GHC -XPackageImports #-}
 
 module Parser (parseSlides) where
 
@@ -8,13 +7,11 @@ import Tkhs
 import Text.Parsec hiding (newline, (<|>))
 import Control.Monad.Identity
 import Control.Applicative hiding (many)
-import Data.Maybe
-import Data.List.PointedList as Zipper
 
 import Prelude hiding (lines)
 
-parseSlides :: String -> Either ParseError SlideSet
-parseSlides str = parse (fromJust . Zipper.fromList <$> many1 slide) "" str
+parseSlides :: String -> Either ParseError [Slide]
+parseSlides str = parse (many1 slide) "" str
 
 type PC a = ParsecT String () Identity a
 
