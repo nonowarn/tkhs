@@ -24,15 +24,15 @@ Executable tkhs
   main-is:           Main.hs
   ghc-options:       -Wall
   build-depends:     base == 4.*
-                   , pointedlist
                    , mtl
                    , vty == 4.*
-                   , parsec == 3.*
+                   , parsec == 2.*
                    , pretty
                    , utf8-string
   other-modules:     Vty
                      Tkhs
                      Parser
+                     Zipper
   if flag(test)
     buildable:       False
 

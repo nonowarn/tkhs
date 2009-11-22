@@ -4,16 +4,16 @@ module Parser (parseSlides) where
 
 import Tkhs
 
-import Text.Parsec hiding (newline, (<|>))
+import Text.ParserCombinators.Parsec hiding (newline)
 import Control.Monad.Identity
-import Control.Applicative hiding (many)
+import Control.Applicative hiding (many, (<|>))
 
 import Prelude hiding (lines)
 
 parseSlides :: String -> Either ParseError [Slide]
 parseSlides str = parse (many1 slide) "" str
 
-type PC a = ParsecT String () Identity a
+type PC a = Parser a
 
 t_sig, f_sig, any_sig :: PC ()
 t_sig = char '-' >> newline >> return ()

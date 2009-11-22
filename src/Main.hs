@@ -6,7 +6,7 @@ import Parser
 import System.Environment
 import System.IO.UTF8 as U
 import Data.Char
-import qualified Data.List.PointedList as Zipper
+import qualified Zipper
 import Data.Maybe
 
 main :: IO ()

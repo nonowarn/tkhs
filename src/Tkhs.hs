@@ -16,8 +16,8 @@ module Tkhs (
 
 import Vty hiding (style)
 
-import qualified Data.List.PointedList as Zipper
-import Data.List.PointedList (PointedList)
+import qualified Zipper
+import Zipper (Zipper)
 import Control.Applicative hiding ((<|>))
 import Control.Monad.State
 import Control.Monad.Reader
@@ -26,8 +26,6 @@ import qualified Data.Foldable as F
 import System.IO
 import System.Exit
 import Text.PrettyPrint hiding (render)
-
-type Zipper a = PointedList a
 
 data Slide = T [String] | F [String]
 type SlideSet = Zipper Slide
