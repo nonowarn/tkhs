@@ -14,7 +14,7 @@ focus = current
 next, previous :: Zipper a -> Maybe (Zipper a)
 next     (Zipper _ _ [])      = Nothing
 next     (Zipper ps c (n:ns)) = Just $ Zipper (c:ps) n ns
-prev     (Zipper [] _ _)      = Nothing
+previous (Zipper [] _ _)      = Nothing
 previous (Zipper (p:ps) c ns) = Just $ Zipper ps p (c:ns)
 
 fromList :: [a] -> Maybe (Zipper a)
