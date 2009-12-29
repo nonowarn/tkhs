@@ -14,7 +14,7 @@ module Tkhs (
 , Zipper
 )where
 
-import Vty hiding (style)
+import Vty
 
 import qualified Zipper
 import Zipper (Zipper)
