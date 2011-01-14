@@ -48,5 +48,5 @@ Executable test
 
 
 Source-repository head
-  type:              darcs
-  location:          http://patch-tag.com/r/nonowarn/tkhs/pullrepo
+  type:              git
+  location:          git://github.com/nonowarn/tkhs.git
