@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -fglasgow-exts -XNoMonomorphismRestriction #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 
 module Parser (parseSlides) where
 

@@ -1,4 +1,4 @@
-{-# OPTIONS_GHC -fglasgow-exts #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Vty (
 -- * V Monad (Vty actions wrapper)
