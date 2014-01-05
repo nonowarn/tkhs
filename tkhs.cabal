@@ -22,10 +22,10 @@ Executable tkhs
   hs-source-dirs:    src
   main-is:           Main.hs
   ghc-options:       -Wall
-  build-depends:     base == 4.*
+  build-depends:     base
                    , mtl
-                   , vty == 4.6.*
-                   , parsec == 2.*
+                   , vty
+                   , parsec
                    , pretty
                    , utf8-string
   other-modules:     Vty
