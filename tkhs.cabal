@@ -10,7 +10,7 @@ extra-source-files:  README, demo/demo.txt
 author:              Yusaku Hashimoto
 maintainer:          Yusaku Hashimoto <nonowarn@gmail.com>
 build-type:          Simple
-cabal-version:       >= 1.6
+cabal-version:       >= 1.8
 stability:           experimental
 homepage:            http://patch-tag.com/r/nonowarn/tkhs/snapshot/current/content/pretty/README
 
@@ -22,7 +22,7 @@ Executable tkhs
   hs-source-dirs:    src
   main-is:           Main.hs
   ghc-options:       -Wall -threaded
-  build-depends:     base
+  build-depends:     base        == 4.*
                    , mtl
                    , vty         == 5.*
                    , parsec
