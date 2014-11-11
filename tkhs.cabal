@@ -24,7 +24,7 @@ Executable tkhs
   ghc-options:       -Wall -threaded
   build-depends:     base
                    , mtl
-                   , vty
+                   , vty         == 5.*
                    , parsec
                    , pretty
                    , utf8-string
