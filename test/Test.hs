@@ -12,7 +12,7 @@ main = defaultMain [
         ,"returns False unless an image seemed to fit" ~~
           not (doesFitBy   0   0 (render "foo"))
         ,"returns True if width and height is equal to image's width height" ~~
-          let img = render "foo"; w = imgWidth img; h = imgHeight img
+          let img = render "foo"; w = imageWidth img; h = imageHeight img
           in doesFitBy w h img
         ]
        ]

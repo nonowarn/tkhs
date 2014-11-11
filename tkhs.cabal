@@ -9,7 +9,7 @@ license-file:        LICENSE
 extra-source-files:  README, demo/demo.txt
 author:              Yusaku Hashimoto
 maintainer:          Yusaku Hashimoto <nonowarn@gmail.com>
-build-type:          Custom
+build-type:          Simple
 cabal-version:       >= 1.6
 stability:           experimental
 homepage:            http://patch-tag.com/r/nonowarn/tkhs/snapshot/current/content/pretty/README
@@ -35,16 +35,14 @@ Executable tkhs
   if flag(test)
     buildable:       False
 
-Executable test
+Test-Suite test-tkhs
+  type: exitcode-stdio-1.0
   hs-source-dirs:    src, test
   other-modules:
   main-is:           Test.hs
-  if !flag(test)
-    buildable:         False
-  else
-    build-depends:     test-framework
-                     , test-framework-hunit
-                     , HUnit
+  build-depends:     test-framework
+                   , test-framework-hunit
+                   , HUnit
 
 
 Source-repository head
