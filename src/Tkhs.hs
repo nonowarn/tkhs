@@ -14,7 +14,7 @@ module Tkhs (
 , Zipper
 )where
 
-import Vty
+import Vty hiding (text)
 
 import qualified Zipper
 import Zipper (Zipper)
@@ -37,13 +37,13 @@ newtype P a = P { unP :: StateT PictureSet V a }
 slideToImage :: Slide -> Image
 slideToImage (T ls) = processBy (flip centeringBy 1 . fromIntegral) ls
 slideToImage (F ls) = processBy ljust                ls
-    where ljust maxlen img = let orig_width = image_width img
-                             in img <|> render (replicate (maxlen - fromIntegral orig_width) ' ')
+    where ljust maxlen img = let origWidth = imageWidth img
+                             in img <|> render (replicate (maxlen - fromIntegral origWidth) ' ')
 
 processBy :: (Int -> Image -> Image) -> [String] -> Image
 processBy f ls = let imgs = map render ls
-                     maxlen = fromIntegral . maximum $ map image_width imgs
-                 in vert_cat . map (f maxlen) $ imgs
+                     maxlen = fromIntegral . maximum $ map imageWidth imgs
+                 in vertCat . map (f maxlen) $ imgs
 
 -- slideSetToPictureSet :: SlideSet -> V PictureSet
 -- slideSetToPictureSet = T.mapM $ fmap toPic
@@ -56,8 +56,8 @@ runP (P st) slides = runVty $ do
    let imgset = fmap slideToImage slides
    check <- F.and <$> T.mapM doesFit imgset
    when (not check) $ do
-     let maxWidth = F.maximum $ fmap image_width imgset
-         maxHeight = F.maximum $ fmap image_height imgset
+     let maxWidth = F.maximum $ fmap imageWidth imgset
+         maxHeight = F.maximum $ fmap imageHeight imgset
      mapM_ warn [ "To display this presentation, the terminal must be at least "
                       ++ show maxWidth ++ "x" ++ show maxHeight ++ "."
                 , "Please try again with a bigger terminal."

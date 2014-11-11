@@ -21,7 +21,7 @@ flag test
 Executable tkhs
   hs-source-dirs:    src
   main-is:           Main.hs
-  ghc-options:       -Wall
+  ghc-options:       -Wall -threaded
   build-depends:     base
                    , mtl
                    , vty

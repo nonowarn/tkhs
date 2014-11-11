@@ -50,12 +50,12 @@ newtype D r a = D { unD :: Writer [Dispatcher r] a }
 
 runVty :: V a -> IO a
 runVty (V v) = do
-  vty <- mkVty
+  vty <- mkVty =<< userConfig
   a <- runReaderT v vty `finally` shutdown vty
   return a
 
 event :: V Event
-event = ask >>= liftIO . next_event
+event = ask >>= liftIO . nextEvent
 
 draw :: Picture -> V ()
 draw p = ask >>= liftIO . flip update p
@@ -63,13 +63,13 @@ draw p = ask >>= liftIO . flip update p
 clear :: V ()
 clear = ask >>= liftIO . refresh
 
-type Width = Word
-type Height = Word
+type Width = Int
+type Height = Int
 
 size :: V (Width,Height)
 size = do
-  term <- terminal <$> ask
-  DisplayRegion w h <- liftIO $ display_bounds term
+  output <- asks outputIface
+  (w, h) <- liftIO $ displayBounds output
   return (w,h)
 
 width :: V Width
@@ -81,7 +81,7 @@ height = snd <$> size
 centering :: Image -> V Image
 centering image = do
   (w,h) <- size
-  let imgW = image_width image
+  let imgW = imageWidth image
       newImg = if imgW > w
                then image
                else centeringBy w h image
@@ -107,7 +107,7 @@ asKeyEvent :: Key -> KeyEvent
 asKeyEvent k = KE (k,[])
 
 ascii :: Char -> KeyEvent
-ascii c = asKeyEvent . KASCII $ c
+ascii c = asKeyEvent . KChar $ c
 
 modifiedBy :: KeyEvent -> Modifier -> KeyEvent
 modifiedBy (KE (k,ms)) m = KE (k,m:ms)
@@ -141,38 +141,34 @@ waitOnce r d = do
   return . maybe r id . lookup evt $ toTable d
 
 toPic :: Image -> Picture
-toPic img = pic_for_image img
+toPic img = picForImage img
 
 render :: String -> Image
 -- render str = let bs = U.pack str
 --              in renderBS attr bs
-render = horiz_cat . map (char def_attr)
-
-toInt :: Word -> Int
-toInt = fromIntegral
+render = horizCat . map (char defAttr)
 
 centeringBy :: Width -> Height -> Image -> Image
 centeringBy wholeWidth wholeHeight img
-    | wholeWidth < image_width img || wholeHeight < image_height img = img
-    | otherwise = let imgW = image_width img
-                      imgH = image_height img
+    | wholeWidth < imageWidth img || wholeHeight < imageHeight img = img
+    | otherwise = let imgW = imageWidth img
+                      imgH = imageHeight img
                       magW = wholeWidth - imgW
                       magH = wholeHeight - imgH
                       lpad = magW `div` 2
                       rpad = magW `div` 2 + magW `mod` 2
                       tpad = magH `div` 2
                       bpad = magH `div` 2 + magH `mod` 2
-                      spacebox w h  = vert_cat
-                                    . replicate (toInt h)
-                                    . render $ replicate (toInt w) ' '
+                      spacebox w h  = vertCat
+                                    . replicate h
+                                    . render $ replicate w ' '
                   in spacebox lpad wholeHeight
                      <|>
-                        (spacebox imgW tpad
-                     <-> img
-                     <-> spacebox imgW bpad)
+                         ( spacebox imgW tpad
+                       <-> img
+                       <-> spacebox imgW bpad )
                      <|>
                      spacebox rpad wholeHeight
 
 doesFitBy :: Width -> Height -> Image -> Bool
-doesFitBy w h img = w >= image_width img && h >= image_height img
-
+doesFitBy w h img = w >= imageWidth img && h >= imageHeight img
