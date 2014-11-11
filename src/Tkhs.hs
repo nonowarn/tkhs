@@ -32,7 +32,7 @@ type SlideSet = Zipper Slide
 type PictureSet = Zipper Picture
 
 newtype P a = P { unP :: StateT PictureSet V a }
-    deriving (Functor, Monad, MonadState PictureSet)
+    deriving (Functor, Applicative, Monad, MonadState PictureSet)
 
 slideToImage :: Slide -> Image
 slideToImage (T ls) = processBy (flip centeringBy 1 . fromIntegral) ls

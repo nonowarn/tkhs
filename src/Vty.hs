@@ -37,16 +37,15 @@ import Control.Applicative hiding ((<|>))
 import Control.Monad.Reader
 import Control.Monad.Writer
 import Control.Exception
-import Data.Word
 -- import Codec.Binary.UTF8.String
 -- import qualified Data.ByteString.UTF8 as U
 
 newtype V a = V { unV :: ReaderT Vty IO a }
-    deriving (Functor, Monad, MonadIO, MonadReader Vty)
+    deriving (Functor, Applicative, Monad, MonadIO, MonadReader Vty)
 
 type Dispatcher r = (Event, r)
 newtype D r a = D { unD :: Writer [Dispatcher r] a }
-    deriving (Functor, Monad, MonadWriter [Dispatcher r])
+    deriving (Functor, Applicative, Monad, MonadWriter [Dispatcher r])
 
 runVty :: V a -> IO a
 runVty (V v) = do
